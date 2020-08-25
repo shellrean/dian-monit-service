@@ -21,5 +21,7 @@ Route::group(['prefix' => 'v1', 'namespace' => 'Api\v1'], function() {
 		Route::get('logout', 'AuthController@logout');
 
 		Route::apiResource('schools', 'SchoolController');
+
+		Route::get('reports', 'ReportController@index');
 	});
 });

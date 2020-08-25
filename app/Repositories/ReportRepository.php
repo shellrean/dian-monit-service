@@ -44,21 +44,79 @@ class ReportRepository
 	}
 
 	/**
-	 * Get data report
+	 * Get data reports
 	 *
 	 * @author shellrean <wandinak17@gamil.com>
 	 * @since 1.0.0
-	 * @return Collection
+	 * @return void
 	 */
-	public function getDataReports()
+	public function getDataReports($date = '')
 	{
 		try {
-			// $reports = Report::with('school')->whereDate('created_at',\Carbon\Carbon::now())->get();
-			$reports = School::with(['report' => function($query){
-				$query->whereDate('created_at', \Carbon\Carbon::today());
+			if($date == '') {
+				$date = \Carbon\Carbon::today();
+			}
+			$reports = School::with(['report' => function($query) use ($date) {
+				$query->whereDate('created_at', $date);
 			}])->get();
 			$this->reports = $reports;
 		} catch (\Exception $e) {
+			throw new \App\Exceptions\ModelException($e->getMessage());
+		}
+	}
+
+	/**
+	 * Get data report
+	 *
+	 * @author shellrean <wandinak17@gmail.com>
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public function getDataReport($school_id)
+	{
+		try {
+			$report = School::with(['report' => function($query){
+				$query->whereDate('created_at', \Carbon\Carbon::today());
+			}])->where('id', $school_id)->first();
+			$this->report = $report;
+		} catch (\Exception $e) {
+			throw new \App\Exceptions\ModelException($e->getMessage());
+		}
+	}
+
+	/**
+	 * Store dta report
+	 *
+	 * @author shellrean <wandinak17@gmail.com>
+	 * @since 1.0.0
+	 * @param json
+	 * @return vod
+	 */
+	public function createDataReports($school_id, $name, $data, $date):void
+	{
+		try {
+			if($date == '') {
+				$date = \Carbon\Carbon::today();
+			}
+			$report = Report::where(['school_id' => $school_id, 'name' => $name, 'created_at' => $date])->first();
+			if($report) {
+				$report->update([
+					'name'	=> $name,
+					'school_id' => $school_id,
+					'data'	=> $data,
+					'created_at' => $date,
+					'updated_at' => $date
+				]);
+				return;
+			}
+			Report::create([
+				'name'	=> $name,
+				'school_id' => $school_id,
+				'data'	=> $data,
+				'created_at' => $date,
+				'updated_at' => $date
+			]);
+		} catch (Exception $e) {
 			throw new \App\Exceptions\ModelException($e->getMessage());
 		}
 	}

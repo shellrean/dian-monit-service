@@ -22,6 +22,10 @@ Route::group(['prefix' => 'v1', 'namespace' => 'Api\v1'], function() {
 
 		Route::apiResource('schools', 'SchoolController');
 
+		
+		Route::get('reports/{school_id}', 'ReportController@collect');
+		
 		Route::get('reports', 'ReportController@index');
+		Route::get('reports/{school_id}/pdf', 'ReportController@getPdf');
 	});
 });

@@ -27,8 +27,16 @@ class ReportController extends Controller
         if($date != '') {
             $date = \Carbon\Carbon::parse($date);
         }
-    	$reportRepository->getDataReports($date);
-    	return SendResponse::acceptData($reportRepository->getReports());
+        $reportRepository->getDataReports($date);
+        $res = $reportRepository->getReports()->map(function($item) {
+            return [
+                'id'    => $item->id,
+                'name'  => $item->name,
+                'npsn'  => $item->npsn,
+                'report'=> $item->report
+            ];
+        });
+    	return SendResponse::acceptData($res);
     }
 
     /**

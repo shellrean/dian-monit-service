@@ -10,6 +10,6 @@ class School extends Model
 
     public function report()
     {
-    	return $this->hasMany(Report::class);
+    	return $this->hasOne(Report::class);
     }
 }

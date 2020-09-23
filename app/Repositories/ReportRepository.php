@@ -96,15 +96,17 @@ class ReportRepository
 	{
 		try {
 			if($date == '') {
-				$date = \Carbon\Carbon::today();
+				$date = \Carbon\Carbon::now();
 			}
-			$report = Report::where(['school_id' => $school_id, 'name' => $name, 'created_at' => $date])->first();
+			$report = Report::where(['school_id' => $school_id, 'name' => $name])
+			->whereDate('created_at', $date)
+			->first();
 			if($report) {
+				$date = \Carbon\Carbon::now();
 				$report->update([
 					'name'	=> $name,
 					'school_id' => $school_id,
 					'data'	=> $data,
-					'created_at' => $date,
 					'updated_at' => $date
 				]);
 				return;

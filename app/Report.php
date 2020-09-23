@@ -9,7 +9,8 @@ class Report extends Model
     protected $guarded = [];
 
     protected $casts = [
-    	'data' => 'array'
+        'data' => 'array',
+        'updated_at' =>  'datetime:d/m/Y h:i:s A',
     ];
 
     public function school()
